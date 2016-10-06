@@ -48,9 +48,11 @@
         <run.addResources>false</run.addResources>
         <spring-security.version>4.1.0.RELEASE</spring-security.version>
         <springfox.version>2.5.0</springfox.version>
+        <angular.ui.router.version>0.3.1</angular.ui.router.version>
         <stormpath.java.version>1.1.0</stormpath.java.version>
         <stormpath.angular.version>1.0.0</stormpath.angular.version>
         <bootstrap.version>3.3.7</bootstrap.version>
+        <webjars.locator.version>0.30</webjars.locator.version>
         <!-- Sonar properties -->
         <project.testresult.directory>${project.build.directory}/test-results</project.testresult.directory>
         <sonar-maven-plugin.version>3.0.2</sonar-maven-plugin.version>
@@ -79,6 +81,11 @@
             <version>${stormpath.angular.version}</version>
         </dependency>
         <dependency>
+            <groupId>org.webjars.bower</groupId>
+            <artifactId>angular-ui-router</artifactId>
+            <version>${angular.ui.router.version}</version>
+        </dependency>
+        <dependency>
             <groupId>org.webjars</groupId>
             <artifactId>bootstrap</artifactId>
             <version>${bootstrap.version}</version>
@@ -87,6 +94,12 @@
             <groupId>com.stormpath.spring</groupId>
             <artifactId>stormpath-spring-security-webmvc-spring-boot-starter</artifactId>
             <version>${stormpath.java.version}</version>
+        </dependency>
+        <!-- Allows removing versions from webjar URLs -->
+        <dependency>
+            <groupId>org.webjars</groupId>
+            <artifactId>webjars-locator</artifactId>
+            <version>${webjars.locator.version}</version>
         </dependency>
         <dependency>
             <groupId>io.dropwizard.metrics</groupId>

@@ -6,7 +6,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.*;
 import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver;
 
-@Configuration
+//@Configuration
 public class ThymeleafConfiguration {
 
     @SuppressWarnings("unused")

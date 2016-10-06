@@ -46,14 +46,14 @@ public class WebConfigurer implements ServletContextInitializer, EmbeddedServlet
         if (env.getActiveProfiles().length != 0) {
             log.info("Web application configuration, using profiles: {}", Arrays.toString(env.getActiveProfiles()));
         }
-        EnumSet<DispatcherType> disps = EnumSet.of(DispatcherType.REQUEST, DispatcherType.FORWARD, DispatcherType.ASYNC);
+        /*EnumSet<DispatcherType> disps = EnumSet.of(DispatcherType.REQUEST, DispatcherType.FORWARD, DispatcherType.ASYNC);
         initMetrics(servletContext, disps);
         if (env.acceptsProfiles(Constants.SPRING_PROFILE_PRODUCTION)) {
             initCachingHttpHeadersFilter(servletContext, disps);
         }
         if (env.acceptsProfiles(Constants.SPRING_PROFILE_DEVELOPMENT)) {
             initH2Console(servletContext);
-        }
+        }*/
         log.info("Web application fully configured");
     }
 
@@ -62,12 +62,12 @@ public class WebConfigurer implements ServletContextInitializer, EmbeddedServlet
      */
     @Override
     public void customize(ConfigurableEmbeddedServletContainer container) {
-        MimeMappings mappings = new MimeMappings(MimeMappings.DEFAULT);
+        /*MimeMappings mappings = new MimeMappings(MimeMappings.DEFAULT);
         // IE issue, see https://github.com/jhipster/generator-jhipster/pull/711
         mappings.add("html", "text/html;charset=utf-8");
         // CloudFoundry issue, see https://github.com/cloudfoundry/gorouter/issues/64
         mappings.add("json", "text/html;charset=utf-8");
-        container.setMimeMappings(mappings);
+        container.setMimeMappings(mappings);*/
         // When running in an IDE or with ./mvnw spring-boot:run, set location of the static web assets.
         setLocationForStaticAssets(container);
     }
@@ -78,7 +78,7 @@ public class WebConfigurer implements ServletContextInitializer, EmbeddedServlet
         if (env.acceptsProfiles(Constants.SPRING_PROFILE_PRODUCTION)) {
             root = new File(prefixPath + "target/www/");
         } else {
-            root = new File(prefixPath + "src/main/webapp/");
+            root = new File(prefixPath + "src/main/resources/static/");
         }
         if (root.exists() && root.isDirectory()) {
             container.setDocumentRoot(root);
@@ -140,17 +140,17 @@ public class WebConfigurer implements ServletContextInitializer, EmbeddedServlet
         metricsAdminServlet.setLoadOnStartup(2);
     }
 
-    @Bean
+    /*@Bean
     @ConditionalOnProperty(name = "jhipster.cors.allowed-origins")
     public CorsFilter corsFilter() {
         log.debug("Registering CORS filter");
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         CorsConfiguration config = jHipsterProperties.getCors();
-        source.registerCorsConfiguration("/api/**", config);
+        source.registerCorsConfiguration("/api*//**", config);
         source.registerCorsConfiguration("/v2/api-docs", config);
-        source.registerCorsConfiguration("/oauth/**", config);
+        source.registerCorsConfiguration("/oauth*//**", config);
         return new CorsFilter(source);
-    }
+    }*/
 
     /**
      * Initializes H2 console.

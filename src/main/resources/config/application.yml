@@ -13,6 +13,9 @@
 
 # Angular Profile view needs custom data from the /me endpoint
 stormpath:
+    client:
+        cacheManager:
+            enabled: false
     web:
         me:
             expand:
