@@ -11,6 +11,14 @@
 # http://docs.spring.io/spring-boot/docs/current/reference/html/common-application-properties.html
 # ===================================================================
 
+# Angular Profile view needs custom data from the /me endpoint
+stormpath:
+    web:
+        me:
+            expand:
+                customData: true
+        produces: application/json
+
 management:
     context-path: /management
     health:
