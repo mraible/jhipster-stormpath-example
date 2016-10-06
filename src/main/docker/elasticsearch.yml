@@ -1,0 +1,10 @@
+version: '2'
+services:
+    stormtrooper-elasticsearch:
+        container_name: stormtrooper-elasticsearch
+        image: elasticsearch:2.4.0
+        # volumes:
+        #     - ~/volumes/jhipster/stormtrooper/elasticsearch/:/usr/share/elasticsearch/data/
+        ports:
+            - 9200:9200
+            - 9300:9300
