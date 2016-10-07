@@ -1,6 +1,6 @@
 {
   "generator-jhipster": {
-    "jhipsterVersion": "3.8.0",
+    "jhipsterVersion": "3.9.0",
     "baseName": "stormtrooper",
     "packageName": "com.stormpath.example",
     "packageFolder": "com/stormpath/example",
@@ -30,6 +30,7 @@
       "en",
       "fr",
       "de"
-    ]
+    ],
+    "serviceDiscoveryType": false
   }
 }
