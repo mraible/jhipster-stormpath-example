@@ -1,0 +1,22 @@
+version: '2'
+services:
+    stormtrooper-app:
+        image: stormtrooper
+        external_links:
+            - stormtrooper-mysql:mysql
+            - stormtrooper-elasticsearch:elasticsearch
+        environment:
+            - SPRING_PROFILES_ACTIVE=prod,swagger
+            - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/stormtrooper?useUnicode=true&characterEncoding=utf8&useSSL=false
+            - JHIPSTER_SLEEP=10 # gives time for the database to boot before the application
+            - SPRING_DATA_ELASTICSEARCH_CLUSTER_NODES=elasticsearch:9300
+        ports:
+            - 8080:8080
+    stormtrooper-mysql:
+        extends:
+            file: mysql.yml
+            service: stormtrooper-mysql
+    stormtrooper-elasticsearch:
+        extends:
+            file: elasticsearch.yml
+            service: stormtrooper-elasticsearch
