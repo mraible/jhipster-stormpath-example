@@ -15,7 +15,7 @@
 stormpath:
     client:
         cacheManager:
-            enabled: false
+            enabled: true
     web:
         me:
             expand:
