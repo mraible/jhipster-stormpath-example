@@ -3,11 +3,12 @@ package com.stormpath.example.config;
 import com.fasterxml.jackson.datatype.jsr310.ser.ZonedDateTimeSerializer;
 import org.springframework.boot.autoconfigure.jackson.Jackson2ObjectMapperBuilderCustomizer;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 
-//@Configuration
+@Configuration
 public class JacksonConfiguration {
 
     public static final DateTimeFormatter ISO_FIXED_FORMAT =

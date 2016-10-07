@@ -12,7 +12,6 @@ import com.stormpath.example.web.rest.vm.ManagedUserVM;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,7 +32,8 @@ public class UserService {
 
     private final Logger log = LoggerFactory.getLogger(UserService.class);
 
-    private PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+    @Inject
+    private PasswordEncoder passwordEncoder;
 
     @Inject
     private UserRepository userRepository;
