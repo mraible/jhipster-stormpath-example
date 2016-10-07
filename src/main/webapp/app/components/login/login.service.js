@@ -24,8 +24,8 @@
             modalInstance = $uibModal.open({
                 animation: true,
                 templateUrl: 'app/components/login/login.html',
-                controller: 'LoginController',
-                controllerAs: 'vm',
+                //controller: 'LoginController',
+                //controllerAs: 'vm',
                 resolve: {
                     translatePartialLoader: ['$translate', '$translatePartialLoader', function ($translate, $translatePartialLoader) {
                         $translatePartialLoader.addPart('login');

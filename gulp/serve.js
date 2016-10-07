@@ -19,7 +19,8 @@ module.exports = function () {
         '/management',
         '/swagger-resources',
         '/v2/api-docs',
-        '/h2-console'
+        '/h2-console',
+        '/login'
     ];
 
     var requireTrailingSlash = proxyRoutes.filter(function (r) {
