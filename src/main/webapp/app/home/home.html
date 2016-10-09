@@ -8,8 +8,8 @@
             <p class="lead" data-translate="home.subtitle">This is your homepage</p>
 
             <div ng-switch="vm.isAuthenticated()">
-                <div class="alert alert-success" ng-switch-when="true" data-translate="home.logged.message" translate-values="{username: '{{vm.account.login}}'}">
-                    You are logged in as user "{{vm.account.login}}".
+                <div class="alert alert-success" ng-switch-when="true" data-translate="home.logged.message" translate-values="{username: '{{vm.account.username}}'}">
+                    You are logged in as user "{{vm.account.username}}".
                 </div>
 
                 <div class="alert alert-warning" ng-switch-when="false" data-translate="global.messages.info.authenticated" translate-compile>
