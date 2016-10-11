@@ -8,23 +8,23 @@
     stateConfig.$inject = ['$stateProvider'];
 
     function stateConfig($stateProvider) {
-        $stateProvider.state('app', {
-            abstract: true,
+        $stateProvider.state('finishReset', {
+            parent: 'account',
+            url: '/reset/finish?key',
+            data: {
+                authorities: []
+            },
             views: {
-                'navbar@': {
-                    templateUrl: 'app/layouts/navbar/navbar.html',
-                    controller: 'NavbarController',
+                'content@': {
+                    templateUrl: 'app/account/reset/finish/reset.finish.html',
+                    controller: 'ResetFinishController',
                     controllerAs: 'vm'
                 }
             },
             resolve: {
-                authorize: ['Auth',
-                    function (Auth) {
-                        return Auth.authorize();
-                    }
-                ],
                 translatePartialLoader: ['$translate', '$translatePartialLoader', function ($translate, $translatePartialLoader) {
-                    $translatePartialLoader.addPart('global');
+                    $translatePartialLoader.addPart('reset');
+                    return $translate.refresh();
                 }]
             }
         });

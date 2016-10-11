@@ -22,8 +22,6 @@ import org.springframework.security.data.repository.query.SecurityEvaluationCont
 
 import javax.inject.Inject;
 
-import static com.stormpath.spring.config.StormpathWebSecurityConfigurer.stormpath;
-
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true)
@@ -70,8 +68,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
-            .apply(stormpath())
-        .and()
             .exceptionHandling()
             .authenticationEntryPoint(authenticationEntryPoint)
         .and()
@@ -85,7 +81,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
             .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
         .and()
             .authorizeRequests()
-            .antMatchers("/**").permitAll()
             .antMatchers("/api/register").permitAll()
             .antMatchers("/api/activate").permitAll()
             .antMatchers("/api/authenticate").permitAll()

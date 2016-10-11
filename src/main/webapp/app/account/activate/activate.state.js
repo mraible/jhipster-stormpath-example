@@ -8,23 +8,24 @@
     stateConfig.$inject = ['$stateProvider'];
 
     function stateConfig($stateProvider) {
-        $stateProvider.state('app', {
-            abstract: true,
+        $stateProvider.state('activate', {
+            parent: 'account',
+            url: '/activate?key',
+            data: {
+                authorities: [],
+                pageTitle: 'activate.title'
+            },
             views: {
-                'navbar@': {
-                    templateUrl: 'app/layouts/navbar/navbar.html',
-                    controller: 'NavbarController',
+                'content@': {
+                    templateUrl: 'app/account/activate/activate.html',
+                    controller: 'ActivationController',
                     controllerAs: 'vm'
                 }
             },
             resolve: {
-                authorize: ['Auth',
-                    function (Auth) {
-                        return Auth.authorize();
-                    }
-                ],
                 translatePartialLoader: ['$translate', '$translatePartialLoader', function ($translate, $translatePartialLoader) {
-                    $translatePartialLoader.addPart('global');
+                    $translatePartialLoader.addPart('activate');
+                    return $translate.refresh();
                 }]
             }
         });
