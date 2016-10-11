@@ -13,14 +13,11 @@
 
 # Angular Profile view needs custom data from the /me endpoint
 stormpath:
-    client:
-        cacheManager:
-            enabled: true
     web:
         me:
             expand:
+                groups: true
                 customData: true
-        produces: application/json
 
 management:
     context-path: /management
