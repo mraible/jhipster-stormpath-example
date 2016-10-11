@@ -49,11 +49,6 @@
         <run.addResources>false</run.addResources>
         <spring-security.version>4.1.0.RELEASE</spring-security.version>
         <springfox.version>2.6.0</springfox.version>
-        <angular.ui.router.version>0.3.1</angular.ui.router.version>
-        <stormpath.java.version>1.1.0</stormpath.java.version>
-        <stormpath.angular.version>1.0.0</stormpath.angular.version>
-        <bootstrap.version>3.3.7</bootstrap.version>
-        <webjars.locator.version>0.30</webjars.locator.version>
         <!-- Sonar properties -->
         <project.testresult.directory>${project.build.directory}/test-results</project.testresult.directory>
         <sonar-maven-plugin.version>3.2</sonar-maven-plugin.version>
@@ -76,32 +71,6 @@
 
 
     <dependencies>
-        <dependency>
-            <groupId>org.webjars.bower</groupId>
-            <artifactId>stormpath-sdk-angularjs</artifactId>
-            <version>${stormpath.angular.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.webjars.bower</groupId>
-            <artifactId>angular-ui-router</artifactId>
-            <version>${angular.ui.router.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.webjars</groupId>
-            <artifactId>bootstrap</artifactId>
-            <version>${bootstrap.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.stormpath.spring</groupId>
-            <artifactId>stormpath-spring-security-webmvc-spring-boot-starter</artifactId>
-            <version>${stormpath.java.version}</version>
-        </dependency>
-        <!-- Allows removing versions from webjar URLs -->
-        <dependency>
-            <groupId>org.webjars</groupId>
-            <artifactId>webjars-locator</artifactId>
-            <version>${webjars.locator.version}</version>
-        </dependency>
         <dependency>
             <groupId>io.dropwizard.metrics</groupId>
             <artifactId>metrics-core</artifactId>
@@ -367,6 +336,12 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter-tomcat</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -765,6 +740,10 @@
             <dependencies>
                 <dependency>
                     <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter-undertow</artifactId>
+                </dependency>
+                <dependency>
+                    <groupId>org.springframework.boot</groupId>
                     <artifactId>spring-boot-devtools</artifactId>
                     <optional>true</optional>
                 </dependency>
@@ -789,6 +768,12 @@
         </profile>
         <profile>
             <id>prod</id>
+            <dependencies>
+                <dependency>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter-undertow</artifactId>
+                </dependency>
+            </dependencies>
             <build>
                 <plugins>
                     <plugin>
@@ -909,6 +894,10 @@
             <dependencies>
                 <dependency>
                     <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter-undertow</artifactId>
+                </dependency>
+                <dependency>
+                    <groupId>org.springframework.boot</groupId>
                     <artifactId>spring-boot-devtools</artifactId>
                     <optional>true</optional>
                 </dependency>
@@ -989,7 +978,7 @@
         <profile>
             <!--
                 Profile for applying IDE-specific configuration.
-                At the moment it only configures MapStruct, which you need when working
+                At the moment it only configures MapStruct, which you need when working 
                 with DTOs.
             -->
             <id>IDE</id>

@@ -69,8 +69,6 @@
     <script src="bower_components/bootstrap-ui-datetime-picker/dist/datetime-picker.js"></script>
     <script src="bower_components/ng-file-upload/ng-file-upload.js"></script>
     <script src="bower_components/ngInfiniteScroll/build/ng-infinite-scroll.js"></script>
-    <script src="bower_components/stormpath-sdk-angularjs/dist/stormpath-sdk-angularjs.min.js"></script>
-    <script src="bower_components/stormpath-sdk-angularjs/dist/stormpath-sdk-angularjs.tpls.min.js"></script>
     <!-- endinject -->
     <!-- endbuild -->
 
@@ -80,10 +78,15 @@
     <script src="app/services/user/user.service.js"></script>
     <script src="app/services/profiles/profile.service.js"></script>
     <script src="app/services/profiles/page-ribbon.directive.js"></script>
+    <script src="app/services/auth/register.service.js"></script>
     <script src="app/services/auth/principal.service.js"></script>
+    <script src="app/services/auth/password-reset-init.service.js"></script>
+    <script src="app/services/auth/password-reset-finish.service.js"></script>
     <script src="app/services/auth/password.service.js"></script>
     <script src="app/services/auth/has-authority.directive.js"></script>
     <script src="app/services/auth/has-any-authority.directive.js"></script>
+    <script src="app/services/auth/auth.service.js"></script>
+    <script src="app/services/auth/auth.jwt.service.js"></script>
     <script src="app/services/auth/activate.service.js"></script>
     <script src="app/services/auth/account.service.js"></script>
     <script src="app/layouts/navbar/navbar.controller.js"></script>
@@ -120,13 +123,13 @@
     <script src="app/blocks/interceptor/notification.interceptor.js"></script>
     <script src="app/blocks/interceptor/errorhandler.interceptor.js"></script>
     <script src="app/blocks/interceptor/auth-expired.interceptor.js"></script>
+    <script src="app/blocks/interceptor/auth.interceptor.js"></script>
     <script src="app/blocks/handlers/translation.handler.js"></script>
     <script src="app/blocks/handlers/state.handler.js"></script>
     <script src="app/blocks/config/uib-pagination.config.js"></script>
     <script src="app/blocks/config/uib-pager.config.js"></script>
     <script src="app/blocks/config/translation-storage.provider.js"></script>
     <script src="app/blocks/config/translation.config.js"></script>
-    <script src="app/blocks/config/stormpath.config.js"></script>
     <script src="app/blocks/config/localstorage.config.js"></script>
     <script src="app/blocks/config/http.config.js"></script>
     <script src="app/blocks/config/compile.config.js"></script>
@@ -162,11 +165,19 @@
     <script src="app/admin/admin.state.js"></script>
     <script src="app/account/settings/settings.state.js"></script>
     <script src="app/account/settings/settings.controller.js"></script>
+    <script src="app/account/reset/request/reset.request.state.js"></script>
+    <script src="app/account/reset/request/reset.request.controller.js"></script>
+    <script src="app/account/reset/finish/reset.finish.state.js"></script>
+    <script src="app/account/reset/finish/reset.finish.controller.js"></script>
     <script src="app/account/register/register.state.js"></script>
     <script src="app/account/register/register.controller.js"></script>
     <script src="app/account/password/password-strength-bar.directive.js"></script>
+    <script src="app/account/password/password.state.js"></script>
+    <script src="app/account/password/password.controller.js"></script>
     <script src="app/account/forgot-password/forgot-password.js"></script>
     <script src="app/account/change-password/change-password.js"></script>
+    <script src="app/account/activate/activate.state.js"></script>
+    <script src="app/account/activate/activate.controller.js"></script>
     <script src="app/account/account.state.js"></script>
     <!-- endinject -->
     <!-- endbuild -->
