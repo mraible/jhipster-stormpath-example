@@ -1,30 +1,27 @@
 (function() {
     'use strict';
 
-    angular
-        .module('stormtrooperApp')
+    angular.module('stormtrooperApp')
         .config(stateConfig);
 
     stateConfig.$inject = ['$stateProvider'];
 
     function stateConfig($stateProvider) {
-        $stateProvider.state('password', {
+        $stateProvider.state('change-password', {
             parent: 'account',
-            url: '/password',
+            url: '/change-password?sptoken',
             data: {
-                authorities: ['ROLE_USER'],
-                pageTitle: 'global.menu.account.password'
+                authorities: [],
+                pageTitle: 'change-password.title'
             },
             views: {
                 'content@': {
-                    templateUrl: 'app/account/password/password.html',
-                    controller: 'PasswordController',
-                    controllerAs: 'vm'
+                    templateUrl: 'app/account/change-password/change-password.html'
                 }
             },
             resolve: {
                 translatePartialLoader: ['$translate', '$translatePartialLoader', function ($translate, $translatePartialLoader) {
-                    $translatePartialLoader.addPart('password');
+                    $translatePartialLoader.addPart('change-password');
                     return $translate.refresh();
                 }]
             }

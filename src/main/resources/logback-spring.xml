@@ -25,6 +25,7 @@
     <logger name="com.stormpath.example" level="#logback.loglevel#"/>
 
     <logger name="com.stormpath.sdk" level="WARN"/>
+    <logger name="com.stormpath.spring" level="WARN"/>
     <logger name="javax.activation" level="WARN"/>
     <logger name="javax.activation" level="WARN"/>
     <logger name="javax.mail" level="WARN"/>

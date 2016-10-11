@@ -5,10 +5,12 @@
         .module('stormtrooperApp')
         .controller('LoginController', LoginController);
 
-    LoginController.$inject = ['$rootScope', '$state', '$scope', 'Auth', '$uibModalInstance', 'STORMPATH_CONFIG'];
+    LoginController.$inject = ['$state', '$scope', '$timeout', 'Principal', '$uibModalInstance'];
 
-    function LoginController ($rootScope, $state, $scope, Auth, $uibModalInstance, STORMPATH_CONFIG) {
+    function LoginController ($state, $scope, $timeout, Principal, $uibModalInstance) {
         var vm = this;
+
+        vm.cancel = cancel;
 
         function cancel () {
             vm.credentials = {
@@ -20,27 +22,19 @@
             $uibModalInstance.dismiss('cancel');
         }
 
-        $scope.$on(STORMPATH_CONFIG.AUTHENTICATION_SUCCESS_EVENT_NAME, function() {
-            console.log('Stormpath authentication succeeded! :)');
+        $timeout(function (){angular.element('#sp-login').focus();}, 200);
+
+        $scope.$on('$authenticated', function(event, data) {
+            Principal.identity(data);
             vm.authenticationError = false;
             $uibModalInstance.close();
             if ($state.current.name === 'register' || $state.current.name === 'activate' ||
                 $state.current.name === 'finishReset' || $state.current.name === 'requestReset') {
                 $state.go('home');
             }
-
-            $rootScope.$broadcast('authenticationSuccess');
-
-            // previousState was set in the authExpiredInterceptor before being redirected to login modal.
-            // since login is succesful, go to stored previousState and clear previousState
-            if (Auth.getPreviousState()) {
-                var previousState = Auth.getPreviousState();
-                Auth.resetPreviousState();
-                $state.go(previousState.name, previousState.params);
-            }
         });
 
-        $scope.$on(STORMPATH_CONFIG.AUTHENTICATION_FAILURE_EVENT_NAME, function() {
+        $scope.$on('$authenticationFailure', function() {
             vm.authenticationError = true;
             console.log('Stormpath authentication failed! :(');
         });
@@ -50,9 +44,11 @@
             $state.go('register');
         }
 
-        function requestResetPassword () {
+        vm.forgotPassword = forgotPassword;
+
+        function forgotPassword() {
             $uibModalInstance.dismiss('cancel');
-            $state.go('requestReset');
+            $state.go('forgot-password');
         }
     }
 })();

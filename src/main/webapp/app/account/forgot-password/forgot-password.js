@@ -1,29 +1,27 @@
 (function() {
     'use strict';
 
-    angular
-        .module('stormtrooperApp')
+    angular.module('stormtrooperApp')
         .config(stateConfig);
 
     stateConfig.$inject = ['$stateProvider'];
 
     function stateConfig($stateProvider) {
-        $stateProvider.state('finishReset', {
+        $stateProvider.state('forgot-password', {
             parent: 'account',
-            url: '/reset/finish?key',
+            url: '/forgot-password',
             data: {
-                authorities: []
+                authorities: [],
+                pageTitle: 'forgot-password.title'
             },
             views: {
                 'content@': {
-                    templateUrl: 'app/account/reset/finish/reset.finish.html',
-                    controller: 'ResetFinishController',
-                    controllerAs: 'vm'
+                    templateUrl: 'app/account/forgot-password/forgot-password.html'
                 }
             },
             resolve: {
                 translatePartialLoader: ['$translate', '$translatePartialLoader', function ($translate, $translatePartialLoader) {
-                    $translatePartialLoader.addPart('reset');
+                    $translatePartialLoader.addPart('forgot-password');
                     return $translate.refresh();
                 }]
             }

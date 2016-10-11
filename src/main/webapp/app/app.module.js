@@ -22,23 +22,13 @@
         ])
         .run(run);
 
-    run.$inject = ['stateHandler', 'translationHandler', '$stormpath', '$rootScope', '$state'];
+    run.$inject = ['stateHandler', 'translationHandler', '$user'];
 
-    function run(stateHandler, translationHandler, $stormpath, $rootScope, $state) {
+    function run(stateHandler, translationHandler, $user) {
         stateHandler.initialize();
         translationHandler.initialize();
 
-        /*$stormpath.uiRouter({
-            loginState: 'login',
-            defaultPostLoginState: 'home'
-        });*/
-
-        /*
-         We want to redirect users back to the home state after they logout, so we watch for the
-         logout event and then transition them to the login state
-         */
-        /*$rootScope.$on('$sessionEnd', function () {
-            $state.transitionTo('home');
-        });*/
+        // check to see if Stormpath user exists
+        $user.get();
     }
 })();
