@@ -5,13 +5,12 @@
         .module('stormtrooperApp')
         .controller('NavbarController', NavbarController);
 
-    NavbarController.$inject = ['$state', 'Auth', 'Principal', 'ProfileService', 'LoginService'];
+    NavbarController.$inject = ['$state', '$scope', 'Principal', 'ProfileService', 'LoginService'];
 
-    function NavbarController ($state, Auth, Principal, ProfileService, LoginService) {
+    function NavbarController ($state, $scope, Principal, ProfileService, LoginService) {
         var vm = this;
 
         vm.isNavbarCollapsed = true;
-        vm.isAuthenticated = Principal.isAuthenticated;
 
         ProfileService.getProfileInfo().then(function(response) {
             vm.inProduction = response.inProduction;
@@ -19,7 +18,6 @@
         });
 
         vm.login = login;
-        vm.logout = logout;
         vm.toggleNavbar = toggleNavbar;
         vm.collapseNavbar = collapseNavbar;
         vm.$state = $state;
@@ -29,11 +27,11 @@
             LoginService.open();
         }
 
-        function logout() {
+        $scope.$on('$sessionEnd',function () {
             collapseNavbar();
-            Auth.logout();
+            Principal.authenticate(null);
             $state.go('home');
-        }
+        });
 
         function toggleNavbar() {
             vm.isNavbarCollapsed = !vm.isNavbarCollapsed;
