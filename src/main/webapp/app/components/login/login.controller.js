@@ -5,22 +5,12 @@
         .module('stormtrooperApp')
         .controller('LoginController', LoginController);
 
-    LoginController.$inject = ['$rootScope', '$state', '$timeout', 'Auth', '$uibModalInstance'];
+    LoginController.$inject = ['$state', '$scope', '$timeout', 'Principal', '$uibModalInstance'];
 
-    function LoginController ($rootScope, $state, $timeout, Auth, $uibModalInstance) {
+    function LoginController ($state, $scope, $timeout, Principal, $uibModalInstance) {
         var vm = this;
 
-        vm.authenticationError = false;
         vm.cancel = cancel;
-        vm.credentials = {};
-        vm.login = login;
-        vm.password = null;
-        vm.register = register;
-        vm.rememberMe = true;
-        vm.requestResetPassword = requestResetPassword;
-        vm.username = null;
-
-        $timeout(function (){angular.element('#username').focus();});
 
         function cancel () {
             vm.credentials = {
@@ -32,42 +22,33 @@
             $uibModalInstance.dismiss('cancel');
         }
 
-        function login (event) {
-            event.preventDefault();
-            Auth.login({
-                username: vm.username,
-                password: vm.password,
-                rememberMe: vm.rememberMe
-            }).then(function () {
-                vm.authenticationError = false;
-                $uibModalInstance.close();
-                if ($state.current.name === 'register' || $state.current.name === 'activate' ||
-                    $state.current.name === 'finishReset' || $state.current.name === 'requestReset') {
-                    $state.go('home');
-                }
+        $timeout(function (){angular.element('#sp-login').focus();}, 200);
 
-                $rootScope.$broadcast('authenticationSuccess');
+        $scope.$on('$authenticated', function(event, data) {
+            Principal.identity(data);
+            vm.authenticationError = false;
+            $uibModalInstance.close();
+            if ($state.current.name === 'register' || $state.current.name === 'activate' ||
+                $state.current.name === 'finishReset' || $state.current.name === 'requestReset') {
+                $state.go('home');
+            }
+        });
 
-                // previousState was set in the authExpiredInterceptor before being redirected to login modal.
-                // since login is succesful, go to stored previousState and clear previousState
-                if (Auth.getPreviousState()) {
-                    var previousState = Auth.getPreviousState();
-                    Auth.resetPreviousState();
-                    $state.go(previousState.name, previousState.params);
-                }
-            }).catch(function () {
-                vm.authenticationError = true;
-            });
-        }
+        $scope.$on('$authenticationFailure', function() {
+            vm.authenticationError = true;
+            console.log('Stormpath authentication failed! :(');
+        });
 
         function register () {
             $uibModalInstance.dismiss('cancel');
             $state.go('register');
         }
 
-        function requestResetPassword () {
+        vm.forgotPassword = forgotPassword;
+
+        function forgotPassword() {
             $uibModalInstance.dismiss('cancel');
-            $state.go('requestReset');
+            $state.go('forgot-password');
         }
     }
 })();
