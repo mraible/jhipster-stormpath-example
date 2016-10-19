@@ -1,6 +1,10 @@
-# stormtrooper
+# JHipster Stormpath Example
 
 This application was generated using JHipster 3.8.0, you can find documentation and help at [https://jhipster.github.io/documentation-archive/v3.8.0](https://jhipster.github.io/documentation-archive/v3.8.0).
+
+You can easily deploy this example to your own Heroku account - including the provisioning of a Stormpath account - by clicking the Heroku button below.
+
+[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy)
 
 ## Development
 
