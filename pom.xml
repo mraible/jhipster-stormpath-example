@@ -10,10 +10,10 @@
     </parent>
 
     <groupId>com.stormpath.example</groupId>
-    <artifactId>stormtrooper</artifactId>
+    <artifactId>jhipster-stormpath-example</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <packaging>war</packaging>
-    <name>Stormtrooper</name>
+    <name>jhipster-stormpath-example</name>
 
     <prerequisites>
         <maven>3.0.0</maven>
