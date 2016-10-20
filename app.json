@@ -5,7 +5,7 @@
     "keywords": ["jhipster", "stormpath", "angularjs", "spring-boot", "spring-security", "identity", "security", "authentication"],
     "success_url": "/",
     "addons": [
-        "heroku-jawsdb:hobby-dev",
+        "jawsdb:kitefin",
         "stormpath"
     ]
 }
