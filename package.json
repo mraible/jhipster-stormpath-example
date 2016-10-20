@@ -1,7 +1,7 @@
 {
-  "name": "stormtrooper",
-  "version": "0.0.0",
-  "description": "Description for stormtrooper",
+  "name": "jhipster-stormpath-example",
+  "version": "0.0.1",
+  "description": "Application that shows how to integrate Stormpath into a JHispter application",
   "private": true,
   "cacheDirectories": [
     "node_modules",
