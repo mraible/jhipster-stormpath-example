@@ -4,5 +4,8 @@
     "repository": "https://github.com/mraible/jhipster-stormpath-example/tree/master",
     "keywords": ["jhipster", "stormpath", "angularjs", "spring-boot", "spring-security", "identity", "security", "authentication"],
     "success_url": "/",
-    "addons": ["stormpath"]
+    "addons": [
+        "heroku-jawsdb:hobby-dev",
+        "stormpath"
+    ]
 }
