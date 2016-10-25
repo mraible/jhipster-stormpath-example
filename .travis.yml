@@ -30,10 +30,10 @@ before_install:
 - java -version
 install: npm install
 script:
-- "./mvnw clean"
-- "./mvnw test"
+- ./mvnw clean
+- ./mvnw test
 - gulp test
-- mkdir -p build/reports/e2e/screenshots/
+- mkdir -p target/reports/e2e/screenshots/
 - docker-compose -f src/main/docker/mysql.yml up
 - sleep 20s
 - export DISPLAY=:99.0
@@ -42,7 +42,7 @@ script:
 - bootPid=$!
 - sleep 60s
 - gulp itest
-- "./mvnw package -Pprod,no-liquibase -DskipTests"
+- ./mvnw package -Pprod -DskipTests
 notifications:
   webhooks:
     on_success: change
