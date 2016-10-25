@@ -35,7 +35,7 @@ script:
 - gulp test
 - mkdir -p target/reports/e2e/screenshots/
 - docker-compose -f src/main/docker/mysql.yml up
-- sleep 20s
+- sleep 60s
 - export DISPLAY=:99.0
 - sh -e /etc/init.d/xvfb start
 - mvn spring-boot:run &
