@@ -38,7 +38,7 @@ script:
 - sh -e /etc/init.d/xvfb start
 - mvn spring-boot:run &
 - bootPid=$!
-- sleep 60s
+- sleep 90s
 - gulp itest
 - ./mvnw package -Pprod -DskipTests
 notifications:
