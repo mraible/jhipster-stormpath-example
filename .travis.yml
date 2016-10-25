@@ -34,7 +34,7 @@ script:
 - "./mvnw test"
 - gulp test
 - mkdir -p build/reports/e2e/screenshots/
-- docker-compose -f src/main/docker/app.yml up
+- docker-compose -f src/main/docker/mysql.yml up
 - sleep 20s
 - export DISPLAY=:99.0
 - sh -e /etc/init.d/xvfb start
