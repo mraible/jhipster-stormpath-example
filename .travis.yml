@@ -33,6 +33,7 @@ script:
 - "./mvnw clean"
 - "./mvnw test"
 - gulp test
+- docker-compose -f src/main/docker/app.yml up
 - sleep 20s
 - export DISPLAY=:99.0
 - sh -e /etc/init.d/xvfb start
