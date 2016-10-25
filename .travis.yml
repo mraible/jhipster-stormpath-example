@@ -40,6 +40,7 @@ script:
 - bootPid=$!
 - sleep 90s
 - gulp itest
+- kill $bootPid
 - ./mvnw package -Pprod -DskipTests
 notifications:
   webhooks:
