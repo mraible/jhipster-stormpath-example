@@ -3,9 +3,9 @@
 
     angular
         .module('stormtrooperApp', [
-            'ngStorage', 
+            'ngStorage',
             'tmh.dynamicLocale',
-            'pascalprecht.translate', 
+            'pascalprecht.translate',
             'ngResource',
             'ngCookies',
             'ngAria',
@@ -22,10 +22,14 @@
         ])
         .run(run);
 
-    run.$inject = ['stateHandler', '$user', 'translationHandler'];
+    run.$inject = ['stateHandler', '$user', 'translationHandler', '$stormpath'];
 
-    function run(stateHandler, $user, translationHandler) {
+    function run(stateHandler, $user, translationHandler, $stormpath) {
         stateHandler.initialize();
+        $stormpath.uiRouter({
+            defaultPostLoginState: 'home',
+            loginState: 'login'
+        });
         // check to see if Stormpath user exists
         $user.get();
         translationHandler.initialize();
