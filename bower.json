@@ -31,11 +31,11 @@
     "sockjs-client": "1.1.1",
     "stomp-websocket": "2.3.4",
     "swagger-ui": "2.1.5",
-    "stormpath-sdk-angularjs": "1.1.0"
-    },
+    "stormpath-sdk-angularjs": "1.1.1"
+  },
   "devDependencies": {
     "angular-mocks": "1.5.8"
-    },
+  },
   "overrides": {
     "angular": {
       "dependencies": {
@@ -57,10 +57,10 @@
         "assets/stylesheets/_bootstrap.scss"
       ]
     }
-    },
+  },
   "resolutions": {
     "angular": "1.5.8",
     "angular-bootstrap": "2.0.0",
     "jquery": "3.1.0"
-    }
+  }
 }
