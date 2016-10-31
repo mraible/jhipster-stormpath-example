@@ -3,7 +3,6 @@
 describe('Directive Tests', function () {
     beforeEach(mockApiAccountCall);
     beforeEach(mockI18nCalls);
-    beforeEach(mockScriptsCalls);
 
     var elm, scope, $httpBackend;
 
