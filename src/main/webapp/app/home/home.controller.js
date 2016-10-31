@@ -5,28 +5,27 @@
         .module('stormtrooperApp')
         .controller('HomeController', HomeController);
 
-    HomeController.$inject = ['$scope', '$rootScope', 'LoginService', '$state'];
+    HomeController.$inject = ['$scope', 'Principal', 'LoginService', '$state'];
 
-    function HomeController($scope, $rootScope, LoginService, $state) {
+    function HomeController ($scope, Principal, LoginService, $state) {
         var vm = this;
 
         vm.account = null;
+        vm.isAuthenticated = null;
         vm.login = LoginService.open;
         vm.register = register;
+        $scope.$on('authenticationSuccess', function() {
+            getAccount();
+        });
 
-        // needed for page refresh
-        if ($rootScope.user) {
-            vm.account = $rootScope.user;
+        getAccount();
+
+        function getAccount() {
+            Principal.identity().then(function(account) {
+                vm.account = account;
+                vm.isAuthenticated = Principal.isAuthenticated;
+            });
         }
-
-        $scope.$on('$stateChangeUnauthorized', function () {
-            $state.go('accessdenied');
-        });
-
-        $scope.$on('$currentUser', function ($event, account) {
-            vm.account = account;
-        });
-
         function register () {
             $state.go('register');
         }

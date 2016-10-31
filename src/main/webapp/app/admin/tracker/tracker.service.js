@@ -6,9 +6,9 @@
         .module('stormtrooperApp')
         .factory('JhiTrackerService', JhiTrackerService);
 
-    JhiTrackerService.$inject = ['$rootScope', '$window', '$cookies', '$http', '$q'];
+    JhiTrackerService.$inject = ['$rootScope', '$window', '$cookies', '$http', '$q', 'AuthServerProvider'];
 
-    function JhiTrackerService($rootScope, $window, $cookies, $http, $q) {
+    function JhiTrackerService ($rootScope, $window, $cookies, $http, $q, AuthServerProvider) {
         var stompClient = null;
         var subscriber = null;
         var listener = $q.defer();
@@ -30,7 +30,10 @@
             //building absolute path so that websocket doesnt fail when deploying with a context path
             var loc = $window.location;
             var url = '//' + loc.host + loc.pathname + 'websocket/tracker';
-
+            var authToken = AuthServerProvider.getToken();
+            if(authToken){
+                url += '?access_token=' + authToken;
+            }
             var socket = new SockJS(url);
             stompClient = Stomp.over(socket);
             var stateChangeStart;
