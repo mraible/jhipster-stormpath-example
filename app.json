@@ -1,0 +1,11 @@
+{
+    "name": "jhipster-stormpath-example",
+    "description": "This app demonstrates integrate Stormpath into a JHipster-generated application.",
+    "repository": "https://github.com/mraible/jhipster-stormpath-example/tree/master",
+    "keywords": ["jhipster", "stormpath", "angularjs", "spring-boot", "spring-security", "identity", "security", "authentication"],
+    "success_url": "/",
+    "addons": [
+        "jawsdb:kitefin",
+        "stormpath"
+    ]
+}
