@@ -75,3 +75,11 @@ jhipster:
     ribbon:
         # comma seperated list of profiles to show a ribbon on the GUI
         displayOnActiveProfiles: dev
+
+# Stormpath configuration
+stormpath:
+    web:
+        me:
+            expand:
+                groups: true
+                customData: true

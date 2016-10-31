@@ -53,7 +53,7 @@
                     <input class="form-control" name="{{field.name}}" id="sp-{{field.name}}" type="{{field.type}}" ng-model="formModel[field.name]"
                            placeholder="{{field.placeholder}}" ng-disabled="creating" ng-required="field.required">
                 <div ng-if="field.name === 'password'">
-                    <password-strength-bar password-to-check="field.name"></password-strength-bar>
+                    <password-strength-bar password-to-check="formModel.password"></password-strength-bar>
                 </div>
             </div>
             <div class="form-group">
