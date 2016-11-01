@@ -1,7 +1,9 @@
 # JHipster Stormpath Example
 
-This application was generated using JHipster 3.8.0, you can find documentation and help at 
-[https://jhipster.github.io/documentation-archive/v3.8.0](https://jhipster.github.io/documentation-archive/v3.8.0).
+This application was generated using JHipster 3.8.0, you can find documentation and help on 
+[the JHipster site](https://jhipster.github.io/documentation-archive/v3.8.0). 
+
+You can read about how this application was created on [the Stormpath blog](https://stormpath.com/blog/stormpath-jhipster-application). There's also the [Stormpath module for JHipster](https://jhipster.github.io/modules/marketplace/#/details/generator-jhipster-stormpath) that automates Stormpath integration into JHipster. Feel free to copy any code in this project for your own use in accordance with the [Apache 2.0 license](LICENSE).
 
 You can easily deploy this example to your own Heroku account - including the provisioning of a Stormpath account - 
 by clicking the Heroku button below. Make sure you're signed into your Heroku account before clicking this button or 
