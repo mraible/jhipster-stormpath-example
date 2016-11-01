@@ -2,7 +2,7 @@
  * stormpath-sdk-angularjs
  * Copyright Stormpath, Inc. 2016
  * 
- * @version v1.0.0-dev-2016-03-02
+ * @version v1.1.1-dev-2016-10-28
  * @link https://github.com/stormpath/stormpath-sdk-angularjs
  * @license Apache-2.0
  */
@@ -58,6 +58,13 @@ if (typeof module !== "undefined" && typeof exports !== "undefined" && module.ex
  * the child state.  However, the controller of the abstract state will be
  * initialized AFTER any configuration rules of the child state have been met.
  *
+ * # Support for `data.authorities`
+ *
+ * If you have used [JHipster](https://jhipster.github.io/) to generate your
+ * project, you are likely using the `data.authorities` property to define
+ * authorization for your views. This library will look for the `data.authorities`
+ * property and apply the same logic as our own `sp.authorize` property.
+ *
  * @example
  *
  * <pre>
@@ -97,6 +104,20 @@ if (typeof module !== "undefined" && typeof exports !== "undefined" && module.ex
  *       });
  * });
  * </pre>
+ *
+ * If using JHipster generated code:
+ *
+ *  <pre>
+ *     // Require a user to be in the admins group in order to see this state
+ *     $stateProvider
+ *       .state('secrets', {
+ *         url: '/admin',
+ *         controller: 'AdminCtrl',
+ *         data: {
+ *           authorities: ['admins']
+ *         }
+ *       });
+ *  </pre>
  */
 
  /**
@@ -217,47 +238,16 @@ angular.module('stormpath', [
     var b = $window.location;
     if (a.host === b.host){
       // The placeholders in the value are replaced by the `grunt dist` command.
-      config.headers['X-Stormpath-Agent'] = 'stormpath-sdk-angularjs/1.0.0' + ' angularjs/' + angular.version.full;
+      config.headers['X-Stormpath-Agent'] = 'stormpath-sdk-angularjs/1.1.1' + ' angularjs/' + angular.version.full;
     }
     return config;
   };
 
   return new StormpathAgentInterceptor();
 }])
-/**
- * Interceptor that intercepts Stormpath error responses and
- * translates them to errors. Adds backward-compatibility for
- * the error structure prior to the framework spec.
- */
-.factory('StormpathErrorInterceptor',['$q', function($q){
-  function StormpathErrorInterceptor(){
-  }
-
-  StormpathErrorInterceptor.prototype.responseError = function(response){
-    var errorMessage = null;
-
-    if (response.data) {
-      errorMessage = response.data.message || response.data.error;
-    }
-
-    if (!errorMessage) {
-      errorMessage = 'An error occured when communicating with the API server.';
-    }
-
-    var error = new Error(errorMessage);
-    
-    error.response = response;
-    error.statusCode = response.status;
-
-    return $q.reject(error);
-  };
-
-  return new StormpathErrorInterceptor();
-}])
 .config(['$httpProvider',function($httpProvider){
   $httpProvider.interceptors.push('SpAuthInterceptor');
   $httpProvider.interceptors.push('StormpathAgentInterceptor');
-  $httpProvider.interceptors.push('StormpathErrorInterceptor');
 }])
 .provider('$stormpath', [function $stormpathProvider(){
   /**
@@ -378,13 +368,14 @@ angular.module('stormpath', [
       StormpathService.prototype.stateChangeInterceptor = function stateChangeInterceptor(config) {
         $rootScope.$on('$stateChangeStart', function(e,toState,toParams){
           var sp = toState.sp || {}; // Grab the sp config for this state
+          var authorities = (toState.data && toState.data.authorities) ? toState.data.authorities : undefined;
 
-          if((sp.authenticate || sp.authorize) && (!$user.currentUser)){
+          if((sp.authenticate || sp.authorize || (authorities && authorities.length)) && (!$user.currentUser)){
             e.preventDefault();
             $user.get().then(function(){
               // The user is authenticated, continue to the requested state
-              if(sp.authorize){
-                if(authorizeStateConfig(sp)){
+              if(sp.authorize || (authorities && authorities.length)){
+                if(authorizeStateConfig(sp, authorities)){
                   $state.go(toState.name,toParams);
                 }else{
                   stateChangeUnauthorizedEvent(toState,toParams);
@@ -402,8 +393,8 @@ angular.module('stormpath', [
               $state.go(toState.name,toParams);
             });
           }
-          else if($user.currentUser && sp.authorize){
-            if(!authorizeStateConfig(sp)){
+          else if($user.currentUser && (sp.authorize || (authorities && authorities.length))){
+            if(!authorizeStateConfig(sp, authorities)){
               e.preventDefault();
               stateChangeUnauthorizedEvent(toState,toParams);
             }
@@ -427,15 +418,21 @@ angular.module('stormpath', [
         });
       };
 
-      function authorizeStateConfig(spStateConfig){
+      function authorizeStateConfig(spStateConfig, authorities){
         var sp = spStateConfig;
         if(sp && sp.authorize && sp.authorize.group) {
           return $user.currentUser.inGroup(sp.authorize.group);
+        }else if(authorities){
+          // add support for reading from JHipster's data: { authorities: ['ROLE_ADMIN'] }
+          // https://github.com/stormpath/stormpath-sdk-angularjs/issues/190
+          var roles = authorities.filter(function(authority){
+            return $user.currentUser.inGroup(authority);
+          });
+          return roles.length > 0;
         }else{
           console.error('Unknown authorize configuration for spStateConfig',spStateConfig);
           return false;
         }
-
       }
 
       function routeChangeUnauthenticatedEvent(toRoute) {
@@ -1262,7 +1259,7 @@ angular.module('stormpath.auth',['stormpath.CONFIG'])
    * "logging in" the user.
    */
   var authServiceProvider = {
-    $get: ['$http','$user','$rootScope','$spFormEncoder',function authServiceFactory($http,$user,$rootScope,$spFormEncoder){
+    $get: ['$http','$user','$rootScope','$spFormEncoder','$q','$spErrorTransformer', function authServiceFactory($http,$user,$rootScope,$spFormEncoder,$q, $spErrorTransformer){
 
       function AuthService(){
         return this;
@@ -1345,7 +1342,18 @@ angular.module('stormpath.auth',['stormpath.CONFIG'])
          * });
          * </pre>
          */
-        var op = $http($spFormEncoder.formPost({
+
+
+        function success(httpResponse){
+          $user.get(true).then(function(){
+            authenticatedEvent(httpResponse);
+          });
+        }
+        function error(httpResponse){
+          authenticationFailureEvent(httpResponse);
+          return $q.reject($spErrorTransformer.transformError(httpResponse));
+        }
+        return $http($spFormEncoder.formPost({
             url: STORMPATH_CONFIG.getUrl('AUTHENTICATION_ENDPOINT'),
             method: 'POST',
             headers: {
@@ -1354,10 +1362,7 @@ angular.module('stormpath.auth',['stormpath.CONFIG'])
             withCredentials: true,
             data: data
           })
-        );
-        var op2 = op.then(cacheCurrentUser).then(authenticatedEvent);
-        op.catch(authenticationFailureEvent);
-        return op2;
+        ).then(success, error);
 
       };
 
@@ -1404,7 +1409,8 @@ angular.module('stormpath.auth',['stormpath.CONFIG'])
       AuthService.prototype.endSession = function endSession(){
         var op = $http.post(STORMPATH_CONFIG.getUrl('DESTROY_SESSION_ENDPOINT'), null, {
             headers: {
-                'Accept': 'application/json'
+                'Accept': 'application/json',
+                'Content-Type': 'application/x-www-form-urlencoded'
             }
         });
 
@@ -1416,10 +1422,6 @@ angular.module('stormpath.auth',['stormpath.CONFIG'])
 
         return op;
       };
-
-      function cacheCurrentUser(){
-        return $user.get();
-      }
 
       function authenticatedEvent(response){
         /**
@@ -1991,6 +1993,46 @@ angular.module('stormpath')
 'use strict';
 
 angular.module('stormpath')
+.provider('$spErrorTransformer', [function $spErrorTransformer(){
+  /**
+   * This service is intentionally excluded from NG Docs.
+   *
+   * It is an internal utility for producing error objects from $http response
+   * errors.
+   */
+
+  this.$get = [
+    function formEncoderServiceFactory(){
+
+      function ErrorTransformerService(){
+
+      }
+
+      ErrorTransformerService.prototype.transformError = function transformError(httpResponse){
+        var errorMessage = null;
+
+        if (httpResponse.data) {
+          errorMessage = httpResponse.data.message || httpResponse.data.error;
+        }
+
+        if (!errorMessage) {
+          errorMessage = 'An error occured when communicating with the server.';
+        }
+
+        var error = new Error(errorMessage);
+
+        error.httpResponse = httpResponse;
+        error.statusCode = httpResponse.status;
+        return error;
+      };
+
+      return new ErrorTransformerService();
+    }
+  ];
+}]);
+'use strict';
+
+angular.module('stormpath')
 .provider('$spFormEncoder', [function $spFormEncoder(){
   /**
    * This service is intentionally excluded from NG Docs.
@@ -2198,16 +2240,16 @@ angular.module('stormpath')
   $scope.formModel = {
     username: ''
   };
-  $scope.requestFailed = false;
+  $scope.error = null;
   $scope.submit = function(){
     $scope.posting = true;
-    $scope.requestFailed = false;
+    $scope.error = null;
     $user.passwordResetRequest({email: $scope.formModel.email})
       .then(function(){
         $scope.sent = true;
       })
-      .catch(function(){
-        $scope.requestFailed = true;
+      .catch(function(err){
+        $scope.error = err.message;
       }).finally(function(){
         $scope.posting = false;
       });
@@ -2457,9 +2499,22 @@ angular.module('stormpath')
  *  * Email
  *  * Password
  *
- * # Customizing the Form
+ * # Customizing the Form Fields
  *
- * If you would like to customize the form:
+ * Our library will make a JSON GET request to the `/register` endpoint on your
+ * server, and it expects to receive a view model that describes the form and
+ * it's fields.  As such, you will define your custom registration fields in
+ * your server-side configuration.  Please see the relevant documentation:
+ *
+ * * Node.js: [Express-Stormpath - Registration](https://docs.stormpath.com/nodejs/express/latest/registration.html)
+ * * PHP: [Stormpath Laravel - Registration](https://docs.stormpath.com/php/laravel/latest/registration.html)
+ * * All other frameworks: please see the server integration guide or contact
+ *   [support@stormpath.com](support@stormpath.com) for assistance.
+ *
+ * # Customizing the Form Template
+ *
+ * If you would like to modify the HTML template that renders our form, you can
+ * do that as well.  Here is what you'll need to do:
  *
  * * Create a new view file in your application.
  * * Copy our default template HTML code into your file, found here:
@@ -2469,7 +2524,8 @@ angular.module('stormpath')
  * the new account (such as `middleName`).
  * * Use the `template-url` option on the directive to point to your new view file.
  *
- * Any form fields you supply that are not one of the default fields (first name, last name)
+ * Any form fields you supply that are not one of the default fields (first
+ * name, last name) will need to be defined in the view model (see above) and
  * will be automatically placed into the new account's customa data object.
  *
  * # Email Verification
@@ -2920,8 +2976,8 @@ angular.module('stormpath.userService',['stormpath.CONFIG'])
   };
 
   this.$get = [
-    '$q','$http','STORMPATH_CONFIG','$rootScope','$spFormEncoder',
-    function userServiceFactory($q,$http,STORMPATH_CONFIG,$rootScope,$spFormEncoder){
+    '$q','$http','STORMPATH_CONFIG','$rootScope','$spFormEncoder','$spErrorTransformer',
+    function userServiceFactory($q,$http,STORMPATH_CONFIG,$rootScope,$spFormEncoder,$spErrorTransformer){
       function UserService(){
         this.cachedUserOp = null;
 
@@ -2934,13 +2990,15 @@ angular.module('stormpath.userService',['stormpath.CONFIG'])
           *
           * @description
           *
-          * Retains the account object of the currently logged in user.
+          * Retains the result of the last call to {@link stormpath.userService.$user#methods_get $user.get()}.
+          * This property is set after every resolution of the {@link stormpath.userService.$user#methods_get $user.get()} promise.
           *
-          * If the user state is unknown, this value is `null`.
+          * If the user state is unknown (while {@link stormpath.userService.$user#methods_get $user.get()}
+          * is waiting to be resolved), this value is `null`.
           *
-          * If the user state is known and the user is not logged in
-          * ({@link stormpath.userService.$user#methods_get $user.get()} has
-          * been called, and rejected) then this value will be `false`.
+          * If the call to {@link stormpath.userService.$user#methods_get $user.get()} has resolved, one of the following will happen:
+          * * If the user is not logged in, this value will be `false`.
+          * * If the user is logged in, this value will be the account object of the user.
           *
           */
 
@@ -3006,29 +3064,34 @@ angular.module('stormpath.userService',['stormpath.CONFIG'])
          *   });
          * </pre>
          */
-        var op = $q.defer();
 
-        $http($spFormEncoder.formPost({
+        return $http($spFormEncoder.formPost({
           url: STORMPATH_CONFIG.getUrl('REGISTER_URI'),
           method: 'POST',
           data: accountData
         }))
         .then(function(response){
           var account = response.data.account || response.data;
-
-          op.resolve(account);
           registeredEvent(account);
-        },op.reject);
+          return $q.resolve(account);
+        },function(httpResponse){
+          return $q.reject($spErrorTransformer.transformError(httpResponse));
+        });
 
-        return op.promise;
       };
-      UserService.prototype.get = function get() {
+      UserService.prototype.get = function get(bypassCache) {
         /**
          * @ngdoc function
          *
          * @name get
          *
          * @methodOf stormpath.userService.$user
+         *
+         * @param {Boolean} [bypassCache=false]
+         *
+         * By default, the UserService will cache the user object after it is
+         * retrieved the first time.  Specify `true` if you need to bypass this
+         * cache, e.g. after updating the user's custom data.
          *
          * @returns {promise}
          *
@@ -3045,8 +3108,12 @@ angular.module('stormpath.userService',['stormpath.CONFIG'])
          * {@link $notLoggedin $notLoggedin} or {@link $currentUser $currentUser}
          * events.  They are emitted when this method has a success or failure.
          *
-         * The user object is a Stormpath Account
-         * object, which is wrapped by a {@link eh User} type.
+         * The result of this operation will be cached on the {@link stormpath.userService.$user#properties_currentuser $user.currentUser}
+         * property.
+         *
+         * The user object is a Stormpath Account object, which is wrapped by a
+         * {@link eh User} type.  It is fetched from the `/me` endpoint on your
+         * server, which is provided by our framework integrations.
          *
          * @example
          *
@@ -3071,7 +3138,7 @@ angular.module('stormpath.userService',['stormpath.CONFIG'])
         if(self.cachedUserOp){
           return self.cachedUserOp.promise;
         }
-        else if(self.currentUser !== null && self.currentUser!==false){
+        else if(self.currentUser !== null && self.currentUser!==false && bypassCache!==true){
           op.resolve(self.currentUser);
           return op.promise;
         }else{
@@ -3144,14 +3211,9 @@ angular.module('stormpath.userService',['stormpath.CONFIG'])
        * verified and can be used for login.  If rejected the token is expired
        * or has already been used.
        *
-       * @param  {Object} data Data object
+       * @param  {String} sptoken
        *
-       * An object literal for passing the email verification token.
-       * Must follow this format:
-       * ```
-       * {
-       *   sptoken: '<token from email>'
-       * }```
+       * The value of the `sptoken` that was sent by email to the user
        *
        * @description
        *
@@ -3225,7 +3287,10 @@ angular.module('stormpath.userService',['stormpath.CONFIG'])
           method: 'POST',
           url: STORMPATH_CONFIG.getUrl('FORGOT_PASSWORD_ENDPOINT'),
           data: data
-        }));
+        }))
+        .catch(function(httpResponse){
+          return $q.reject($spErrorTransformer.transformError(httpResponse));
+        });
       };
 
       /**
@@ -3266,7 +3331,10 @@ angular.module('stormpath.userService',['stormpath.CONFIG'])
           method: 'POST',
           url:STORMPATH_CONFIG.getUrl('CHANGE_PASSWORD_ENDPOINT'),
           data: data
-        }));
+        }))
+        .catch(function(httpResponse){
+          return $q.reject($spErrorTransformer.transformError(httpResponse));
+        });
       };
       function registeredEvent(account){
         /**

@@ -32,5 +32,8 @@
       "de"
     ],
     "serviceDiscoveryType": false
+  },
+    "generator-jhipster-stormpath": {
+        "authenticationType": "stormpath"
   }
 }

@@ -8,7 +8,7 @@
 
     JhiTrackerService.$inject = ['$rootScope', '$window', '$cookies', '$http', '$q'];
 
-    function JhiTrackerService ($rootScope, $window, $cookies, $http, $q) {
+    function JhiTrackerService($rootScope, $window, $cookies, $http, $q) {
         var stompClient = null;
         var subscriber = null;
         var listener = $q.defer();
@@ -30,6 +30,7 @@
             //building absolute path so that websocket doesnt fail when deploying with a context path
             var loc = $window.location;
             var url = '//' + loc.host + loc.pathname + 'websocket/tracker';
+
             var socket = new SockJS(url);
             stompClient = Stomp.over(socket);
             var stateChangeStart;

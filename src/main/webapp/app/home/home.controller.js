@@ -7,7 +7,7 @@
 
     HomeController.$inject = ['$scope', '$rootScope', 'LoginService', '$state'];
 
-    function HomeController ($scope, $rootScope, LoginService, $state) {
+    function HomeController($scope, $rootScope, LoginService, $state) {
         var vm = this;
 
         vm.account = null;
@@ -19,7 +19,11 @@
             vm.account = $rootScope.user;
         }
 
-        $scope.$on('$currentUser', function($event, account) {
+        $scope.$on('$stateChangeUnauthorized', function () {
+            $state.go('accessdenied');
+        });
+
+        $scope.$on('$currentUser', function ($event, account) {
             vm.account = account;
         });
 

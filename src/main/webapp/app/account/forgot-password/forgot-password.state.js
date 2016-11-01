@@ -1,4 +1,4 @@
-(function() {
+(function () {
     'use strict';
 
     angular.module('stormtrooperApp')
@@ -7,21 +7,21 @@
     stateConfig.$inject = ['$stateProvider'];
 
     function stateConfig($stateProvider) {
-        $stateProvider.state('change-password', {
+        $stateProvider.state('forgot-password', {
             parent: 'account',
-            url: '/change-password?sptoken',
+            url: '/forgot-password',
             data: {
                 authorities: [],
-                pageTitle: 'change-password.title'
+                pageTitle: 'forgot-password.title'
             },
             views: {
                 'content@': {
-                    templateUrl: 'app/account/change-password/change-password.html'
+                    templateUrl: 'app/account/forgot-password/forgot-password.html'
                 }
             },
             resolve: {
                 translatePartialLoader: ['$translate', '$translatePartialLoader', function ($translate, $translatePartialLoader) {
-                    $translatePartialLoader.addPart('change-password');
+                    $translatePartialLoader.addPart('reset');
                     return $translate.refresh();
                 }]
             }

@@ -15,20 +15,23 @@
             'ui.bootstrap.datetimepicker',
             'ui.router',
             'infinite-scroll',
-            // jhipster-needle-angularjs-add-module JHipster will add new module here
-            //'angular-loading-bar',
             'stormpath',
-            'stormpath.templates'
+            'stormpath.templates',
+            // jhipster-needle-angularjs-add-module JHipster will add new module here
+            'angular-loading-bar'
         ])
         .run(run);
 
-    run.$inject = ['stateHandler', 'translationHandler', '$user'];
+    run.$inject = ['stateHandler', '$user', 'translationHandler', '$stormpath'];
 
-    function run(stateHandler, translationHandler, $user) {
+    function run(stateHandler, $user, translationHandler, $stormpath) {
         stateHandler.initialize();
-        translationHandler.initialize();
-
+        $stormpath.uiRouter({
+            defaultPostLoginState: 'home',
+            loginState: 'login'
+        });
         // check to see if Stormpath user exists
         $user.get();
+        translationHandler.initialize();
     }
 })();

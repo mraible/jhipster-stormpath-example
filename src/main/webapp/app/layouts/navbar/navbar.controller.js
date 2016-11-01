@@ -7,7 +7,7 @@
 
     NavbarController.$inject = ['$state', '$scope', 'Principal', 'ProfileService', 'LoginService'];
 
-    function NavbarController ($state, $scope, Principal, ProfileService, LoginService) {
+    function NavbarController($state, $scope, Principal, ProfileService, LoginService) {
         var vm = this;
 
         vm.isNavbarCollapsed = true;
@@ -27,7 +27,7 @@
             LoginService.open();
         }
 
-        $scope.$on('$sessionEnd',function () {
+        $scope.$on('$sessionEnd', function () {
             collapseNavbar();
             Principal.authenticate(null);
             $state.go('home');

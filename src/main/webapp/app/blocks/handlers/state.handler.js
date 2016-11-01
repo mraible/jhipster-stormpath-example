@@ -5,9 +5,11 @@
         .module('stormtrooperApp')
         .factory('stateHandler', stateHandler);
 
-    stateHandler.$inject = ['$rootScope', '$translate', 'JhiLanguageService', 'translationHandler', '$window', 'VERSION'];
+    stateHandler.$inject = ['$rootScope', '$translate', 'JhiLanguageService', 'translationHandler', '$window',
+        'VERSION'];
 
-    function stateHandler($rootScope, $translate, JhiLanguageService, translationHandler, $window, VERSION) {
+    function stateHandler($rootScope, $translate, JhiLanguageService, translationHandler, $window,
+                          VERSION) {
         return {
             initialize: initialize
         };
@@ -30,6 +32,7 @@
                 JhiLanguageService.getCurrent().then(function (language) {
                     $translate.use(language);
                 });
+
             });
 
             var stateChangeSuccess = $rootScope.$on('$stateChangeSuccess',  function(event, toState, toParams, fromState, fromParams) {

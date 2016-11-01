@@ -37,6 +37,7 @@
            timeToLiveSeconds="3600">
     </cache>
 
+    <!-- Stormpath cache entries -->
     <cache name="com.stormpath.sdk.tenant.Tenant" timeToLiveSeconds="3600"/>
     <cache name="com.stormpath.sdk.application.Application" timeToLiveSeconds="3600"/>
     <cache name="com.stormpath.sdk.application.ApplicationAccountStoreMapping" timeToLiveSeconds="3600"/>

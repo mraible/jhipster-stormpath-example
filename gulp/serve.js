@@ -19,7 +19,6 @@ module.exports = function () {
         '/management',
         '/swagger-resources',
         '/v2/api-docs',
-        '/h2-console',
         '/forgot',
         '/login',
         '/logout',

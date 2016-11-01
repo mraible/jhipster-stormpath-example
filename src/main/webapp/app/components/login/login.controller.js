@@ -7,7 +7,7 @@
 
     LoginController.$inject = ['$state', '$scope', '$timeout', 'Principal', '$uibModalInstance'];
 
-    function LoginController ($state, $scope, $timeout, Principal, $uibModalInstance) {
+    function LoginController($state, $scope, $timeout, Principal, $uibModalInstance) {
         var vm = this;
 
         vm.cancel = cancel;
@@ -22,9 +22,11 @@
             $uibModalInstance.dismiss('cancel');
         }
 
-        $timeout(function (){angular.element('#sp-login').focus();}, 200);
+        $timeout(function () {
+            angular.element('#sp-login').focus();
+        }, 200);
 
-        $scope.$on('$authenticated', function(event, data) {
+        $scope.$on('$authenticated', function (event, data) {
             Principal.identity(data);
             vm.authenticationError = false;
             $uibModalInstance.close();
@@ -34,7 +36,7 @@
             }
         });
 
-        $scope.$on('$authenticationFailure', function() {
+        $scope.$on('$authenticationFailure', function () {
             vm.authenticationError = true;
             console.log('Stormpath authentication failed! :(');
         });
