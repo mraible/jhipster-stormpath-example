@@ -1,6 +1,10 @@
 const os = require('os');
 
 const HtmlScreenshotReporter = require("protractor-jasmine2-screenshot-reporter");
+var reporter = new HtmlScreenshotReporter({
+    dest: 'target/reports/e2e/screenshots',
+    filename: 'report.html'
+});
 const JasmineReporters = require('jasmine-reporters');
 
 const prefix = 'src/test/javascript/'.replace(/[^/]+/g,'..');
@@ -40,6 +44,13 @@ exports.config = {
         defaultTimeoutInterval: 30000
     },
 
+    // Setup the screenshot report before any tests start
+    beforeLaunch: function() {
+        return new Promise(function(resolve){
+            reporter.beforeLaunch(resolve);
+        });
+    },
+
     onPrepare: function() {
         // Disable animations so e2e tests run more quickly
         var disableNgAnimate = function() {
@@ -75,8 +86,13 @@ exports.config = {
             savePath: 'target/reports/e2e',
             consolidateAll: false
         }));
-        jasmine.getEnv().addReporter(new HtmlScreenshotReporter({
-            dest: "target/reports/e2e/screenshots"
-        }));
+        jasmine.getEnv().addReporter(reporter);
+    },
+
+    // Close the screenshot report after all tests finish
+    afterLaunch: function(exitCode) {
+        return new Promise(function(resolve){
+            reporter.afterLaunch(resolve.bind(this, exitCode));
+        });
     }
 };

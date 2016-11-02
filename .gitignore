@@ -2,7 +2,6 @@
 # Project Specific
 ######################
 /data/**
-/src/main/webapp/content/css/main.css
 /target/www/**
 
 ######################

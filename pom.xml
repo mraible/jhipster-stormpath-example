@@ -50,8 +50,8 @@
         <spring-security.version>4.1.0.RELEASE</spring-security.version>
         <springfox.version>2.6.0</springfox.version>
         <angular.ui.router.version>0.3.1</angular.ui.router.version>
-        <stormpath.java.version>1.1.0</stormpath.java.version>
-        <stormpath.angular.version>1.0.0</stormpath.angular.version>
+        <stormpath.java.version>1.1.2</stormpath.java.version>
+        <stormpath.angular.version>1.1.1</stormpath.angular.version>
         <bootstrap.version>3.3.7</bootstrap.version>
         <webjars.locator.version>0.30</webjars.locator.version>
         <!-- Sonar properties -->
@@ -424,11 +424,6 @@
             <groupId>fr.ippon.spark.metrics</groupId>
             <artifactId>metrics-spark-reporter</artifactId>
             <version>${metrics-spark-reporter.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.stormpath.spring</groupId>
-            <artifactId>stormpath-spring-security-webmvc-spring-boot-starter</artifactId>
-            <version>1.1.2</version>
         </dependency>
         <!-- jhipster-needle-maven-add-dependency -->
     </dependencies>
