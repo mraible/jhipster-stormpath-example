@@ -41,7 +41,7 @@ exports.config = {
 
     jasmineNodeOpts: {
         showColors: true,
-        defaultTimeoutInterval: 30000
+        defaultTimeoutInterval: 60000
     },
 
     // Setup the screenshot report before any tests start
