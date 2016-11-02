@@ -19,7 +19,7 @@ if (os.platform() === 'win32') {
 exports.config = {
     seleniumServerJar: prefix + 'node_modules/protractor/node_modules/webdriver-manager/selenium/selenium-server-standalone-2.53.1.jar',
     chromeDriver: webbrowserDriver,
-    allScriptsTimeout: 20000,
+    allScriptsTimeout: 30000,
 
     suites: {
         account: './e2e/account/*.js',
@@ -41,7 +41,7 @@ exports.config = {
 
     jasmineNodeOpts: {
         showColors: true,
-        defaultTimeoutInterval: 60000
+        defaultTimeoutInterval: 30000
     },
 
     // Setup the screenshot report before any tests start
